@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProfiSpace — Биржа удалённой работы</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app-container">
+
+    <header class="header">
+        <div class="logo">
+            <div class="logo-svg">
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Back face -->
+                  <polygon points="24,4 44,14 44,34 24,44 4,34 4,14" fill="#0e2a45" stroke="#1a4a7a" stroke-width="0.5"/>
+                  <!-- Left face -->
+                  <polygon points="4,14 24,24 24,44 4,34" fill="#0d3060"/>
+                  <!-- Right face -->
+                  <polygon points="44,14 24,24 24,44 44,34" fill="#0a2244"/>
+                  <!-- Top face -->
+                  <polygon points="4,14 24,4 44,14 24,24" fill="#1a5fa8"/>
+                  <!-- Inner left -->
+                  <polygon points="14,19 24,24 24,38 14,33" fill="#0d3a72" opacity="0.8"/>
+                  <!-- Inner right -->
+                  <polygon points="34,19 24,24 24,38 34,33" fill="#0a2d5e" opacity="0.8"/>
+                  <!-- Inner top -->
+                  <polygon points="14,19 24,14 34,19 24,24" fill="#2271c8" opacity="0.9"/>
+                  <!-- Glow edge top-left -->
+                  <line x1="4" y1="14" x2="24" y2="4" stroke="#3d9be8" stroke-width="1.2" opacity="0.7"/>
+                  <line x1="24" y1="4" x2="44" y2="14" stroke="#3d9be8" stroke-width="1.2" opacity="0.7"/>
+                  <!-- Orange arrow -->
+                  <polyline points="28,28 34,22 34,26" stroke="#f97316" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                  <line x1="28" y1="28" x2="34" y2="22" stroke="#f97316" stroke-width="2.5" stroke-linecap="round"/>
+                  <polyline points="34,22 38,22 38,26" stroke="#f97316" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                  <!-- Arrow head -->
+                  <polygon points="38,18 42,22 38,22" fill="#f97316"/>
+                </svg>
+            </div>
+            <div>
+                <h1>Profi<span class="logo-accent">Space</span></h1>
+                <p data-i18n="subtitle">Биржа удалённой работы</p>
+            </div>
+        </div>
+        <div class="header-controls">
+            <div class="lang-switcher">
+                <button class="lang-btn active" data-lang="ru">RU</button>
+                <button class="lang-btn" data-lang="en">EN</button>
+                <button class="lang-btn" data-lang="kz">KZ</button>
+            </div>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon" id="themeIcon"></i>
+            </button>
+            <div class="user-status" id="userStatus">
+                <i class="fas fa-sign-in-alt"></i>
+                <span data-i18n="loginPrompt">Войдите, чтобы продолжить</span>
+            </div>
+            <button class="btn-outline" id="loginBtn" style="display:none" onclick="window.location.href='login.html'">
+                <i class="fas fa-user-plus"></i>
+                <span data-i18n="loginBtn">Вход / Регистрация</span>
+            </button>
+            <button class="btn-logout" id="logoutBtn" style="display:none" onclick="handleLogout()">
+                <i class="fas fa-sign-out-alt"></i>
+                <span data-i18n="logout">Выйти</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main id="mainContent" style="display:none;">
+        <div class="dashboard">
+            <aside class="sidebar">
+                <div class="profile-card" id="profileCard"></div>
+                <nav class="nav-links">
+                    <button class="nav-btn active" data-tab="home">
+                        <i class="fas fa-home"></i>
+                        <span data-i18n="navHome">Главная</span>
+                    </button>
+                    <button class="nav-btn" data-tab="feed">
+                        <i class="fas fa-stream"></i>
+                        <span data-i18n="navProjects">Лента заказов</span>
+                    </button>
+                    <button class="nav-btn" data-tab="myOrders">
+                        <i class="fas fa-tasks"></i>
+                        <span data-i18n="navMyOrders">Мои заказы</span>
+                    </button>
+                    <button class="nav-btn" data-tab="myResponses">
+                        <i class="fas fa-reply-all"></i>
+                        <span data-i18n="navMyResponses">Мои отклики</span>
+                    </button>
+                    <button class="nav-btn" data-tab="deals">
+                        <i class="fas fa-handshake"></i>
+                        <span data-i18n="navDeals">Сделки</span>
+                    </button>
+                </nav>
+                <button id="createOrderBtn" class="btn-create">
+                    <i class="fas fa-plus-circle"></i>
+                    <span data-i18n="createOrder">Создать заказ</span>
+                </button>
+                <button id="clearOrdersBtn" class="btn-clear">
+                    <i class="fas fa-trash-alt"></i>
+                    <span data-i18n="clearOrders">Очистить заказы</span>
+                </button>
+            </aside>
+
+            <div class="content">
+
+                <!-- HOME TAB -->
+                <div id="homeTab" class="tab-content active">
+                    <div class="hero">
+                        <div class="hero-orb orb1"></div>
+                        <div class="hero-orb orb2"></div>
+                        <div class="hero-orb orb3"></div>
+                        <div class="hero-layout">
+                        <div class="hero-inner">
+                            <div class="hero-badge">
+                                <i class="fas fa-bolt"></i>
+                                <span data-i18n="heroBadge">Платформа нового поколения</span>
+                            </div>
+                            <h2 class="hero-title" data-i18n="heroTitle">Будущее фриланса<br>создаётся вместе.</h2>
+                            <p class="hero-desc" data-i18n="heroDesc">Технологии меняются, задачи усложняются, но главное остаётся — люди и их сотрудничество. С <strong>ProfiSpace</strong> заказчики, исполнители и идеи объединяются на одной платформе, чтобы превращать задачи в результат.</p>
+                            <div class="hero-stats">
+                                <div class="hero-stat">
+                                    <span class="stat-val" id="statOrders">0</span>
+                                    <span class="stat-lbl" data-i18n="statOrders">заказов</span>
+                                </div>
+                                <div class="stat-sep"></div>
+                                <div class="hero-stat">
+                                    <span class="stat-val" id="statResponses">0</span>
+                                    <span class="stat-lbl" data-i18n="statResponses">откликов</span>
+                                </div>
+                                <div class="stat-sep"></div>
+                                <div class="hero-stat">
+                                    <span class="stat-val" id="statDeals">0</span>
+                                    <span class="stat-lbl" data-i18n="statDeals">сделок</span>
+                                </div>
+                            </div>
+                            <div class="hero-actions">
+                                <button class="btn-primary hero-cta" data-goto="feed">
+                                    <i class="fas fa-stream"></i>
+                                    <span data-i18n="goToFeed">Перейти к ленте</span>
+                                </button>
+                                <button class="btn-ghost" id="heroCreateBtn">
+                                    <i class="fas fa-plus"></i>
+                                    <span data-i18n="createOrder">Создать заказ</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="hero-right">
+                            <div class="hero-right-glow"></div>
+                            <svg class="hero-cube-big" width="130" height="130" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <polygon points="4,14 24,24 24,44 4,34" fill="#0d3060"/>
+                              <polygon points="44,14 24,24 24,44 44,34" fill="#0a2244"/>
+                              <polygon points="4,14 24,4 44,14 24,24" fill="#1a5fa8"/>
+                              <polygon points="14,19 24,24 24,38 14,33" fill="#0d3a72" opacity="0.8"/>
+                              <polygon points="34,19 24,24 24,38 34,33" fill="#0a2d5e" opacity="0.8"/>
+                              <polygon points="14,19 24,14 34,19 24,24" fill="#2271c8"/>
+                              <line x1="4" y1="14" x2="24" y2="4" stroke="#3d9be8" stroke-width="1.5" opacity="0.95"/>
+                              <line x1="24" y1="4" x2="44" y2="14" stroke="#3d9be8" stroke-width="1.5" opacity="0.95"/>
+                              <line x1="4" y1="14" x2="4" y2="34" stroke="#3d9be8" stroke-width="1" opacity="0.5"/>
+                              <line x1="44" y1="14" x2="44" y2="34" stroke="#3d9be8" stroke-width="1" opacity="0.5"/>
+                              <line x1="4" y1="34" x2="24" y2="44" stroke="#3d9be8" stroke-width="1" opacity="0.5"/>
+                              <line x1="44" y1="34" x2="24" y2="44" stroke="#3d9be8" stroke-width="1" opacity="0.5"/>
+                              <polyline points="26,26 34,18" stroke="#f97316" stroke-width="3.2" stroke-linecap="round" fill="none"/>
+                              <polygon points="34,14 38,18 34,22 30,18" fill="#f97316"/>
+                              <polygon points="34,14 39,12 38,18" fill="#fb923c"/>
+                            </svg>
+                            <div class="hero-brand-big">
+                                <span class="hbb-profi">Profi</span><span class="hbb-space">Space</span>
+                            </div>
+                        </div>
+                        </div>
+                    </div><!-- /hero -->
+
+                    <div class="sep">
+                        <div class="sep-line"></div>
+                        <span class="sep-text" data-i18n="latestOrders">Последние заказы</span>
+                        <div class="sep-line"></div>
+                    </div>
+
+                    <div id="previewList" class="projects-grid"></div>
+                    <div style="text-align:center;margin-top:24px;">
+                        <button class="btn-outline" data-goto="feed">
+                            <span data-i18n="allOrders">Смотреть все заказы</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- FEED TAB -->
+                <div id="feedTab" class="tab-content">
+                    <div class="feed-header">
+                        <div class="feed-title-row">
+                            <h3 class="feed-heading">
+                                <i class="fas fa-stream"></i>
+                                <span data-i18n="navProjects">Лента заказов</span>
+                            </h3>
+                            <span class="count-badge" id="feedCount">0</span>
+                        </div>
+                        <div class="search-filter">
+                            <div class="search-wrap">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="searchOrders" data-i18n-placeholder="searchPlaceholder" placeholder="Поиск по названию...">
+                            </div>
+                            <select id="categoryFilter">
+                                <option value="" data-i18n="catAll">Все категории</option>
+                                <option value="Веб-разработка" data-i18n="catWeb">Веб-разработка</option>
+                                <option value="Дизайн" data-i18n="catDesign">Дизайн</option>
+                                <option value="Маркетинг" data-i18n="catMarketing">Маркетинг</option>
+                                <option value="Мобильные приложения" data-i18n="catMobile">Мобильные приложения</option>
+                                <option value="Копирайтинг" data-i18n="catCopywriting">Копирайтинг</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="projectsList" class="projects-grid"></div>
+                </div>
+
+                <!-- MY ORDERS TAB -->
+                <div id="myOrdersTab" class="tab-content">
+                    <div class="tab-header">
+                        <h3><i class="fas fa-tasks"></i> <span data-i18n="navMyOrders">Мои заказы</span></h3>
+                    </div>
+                    <div id="myOrdersList"></div>
+                </div>
+
+                <!-- MY RESPONSES TAB -->
+                <div id="myResponsesTab" class="tab-content">
+                    <div class="tab-header">
+                        <h3><i class="fas fa-reply-all"></i> <span data-i18n="navMyResponses">Мои отклики</span></h3>
+                    </div>
+                    <div id="myResponsesList"></div>
+                </div>
+
+                <!-- DEALS TAB -->
+                <div id="dealsTab" class="tab-content">
+                    <div class="tab-header">
+                        <h3><i class="fas fa-handshake"></i> <span data-i18n="navDeals">Сделки</span></h3>
+                    </div>
+                    <div id="dealsList"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Create Order Modal -->
+    <div id="createOrderModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <button class="close">&times;</button>
+            <div class="modal-icon"><i class="fas fa-file-alt"></i></div>
+            <h3 data-i18n="newOrder">Новый заказ</h3>
+            <input type="text" id="orderTitle" data-i18n-placeholder="orderTitlePh" placeholder="Название заказа">
+            <select id="orderCategory">
+                <option value="Веб-разработка">Веб-разработка</option>
+                <option value="Дизайн">Дизайн</option>
+                <option value="Маркетинг">Маркетинг</option>
+                <option value="Мобильные приложения">Мобильные приложения</option>
+                <option value="Копирайтинг">Копирайтинг</option>
+            </select>
+            <textarea id="orderDescription" rows="4" data-i18n-placeholder="orderDescPh" placeholder="Описание задач..."></textarea>
+            <input type="text" id="orderBudget" data-i18n-placeholder="orderBudgetPh" placeholder="Бюджет (₽)">
+            <button id="submitOrderBtn" class="btn-primary full">
+                <i class="fas fa-paper-plane"></i>
+                <span data-i18n="publishOrder">Опубликовать заказ</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Response Modal -->
+    <div id="responseModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <button class="close">&times;</button>
+            <div class="modal-icon" style="background:linear-gradient(135deg,#10b981,#34d399)"><i class="fas fa-hand-paper"></i></div>
+            <h3 data-i18n="responseTitle">Отклик на заказ</h3>
+            <p id="responseOrderTitle" class="order-ref"></p>
+            <textarea id="responseComment" rows="4" data-i18n-placeholder="responsePh" placeholder="Ваше предложение..."></textarea>
+            <input type="text" id="responsePrice" data-i18n-placeholder="responsePricePh" placeholder="Ваша цена">
+            <button id="submitResponseBtn" class="btn-primary full">
+                <i class="fas fa-paper-plane"></i>
+                <span data-i18n="sendResponse">Отправить отклик</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Chat Modal -->
+    <div id="chatModal" class="modal" style="display:none;">
+        <div class="modal-content chat-modal">
+            <button class="close">&times;</button>
+            <h3 class="chat-head"><i class="fas fa-comments"></i> <span data-i18n="chatTitle">Чат:</span> <span id="chatOrderTitle"></span></h3>
+            <div id="chatMessages" class="chat-messages"></div>
+            <div class="chat-input">
+                <input type="text" id="chatInput" data-i18n-placeholder="chatPh" placeholder="Введите сообщение...">
+                <button id="sendMessageBtn"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div id="reviewModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <button class="close">&times;</button>
+            <div class="modal-icon" style="background:linear-gradient(135deg,#f59e0b,#fbbf24)"><i class="fas fa-star"></i></div>
+            <h3 data-i18n="leaveReview">Оставить отзыв</h3>
+            <p class="review-target"><span data-i18n="executor">Исполнитель:</span> <strong id="reviewFreelancerName"></strong></p>
+            <div class="rating-stars">
+                <span data-rating="1">★</span><span data-rating="2">★</span>
+                <span data-rating="3">★</span><span data-rating="4">★</span><span data-rating="5">★</span>
+            </div>
+            <textarea id="reviewText" rows="3" data-i18n-placeholder="reviewPh" placeholder="Ваш отзыв..."></textarea>
+            <button id="submitReviewBtn" class="btn-primary full">
+                <i class="fas fa-check"></i>
+                <span data-i18n="sendReview">Отправить отзыв</span>
+            </button>
+        </div>
+    </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
